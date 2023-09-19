@@ -7,6 +7,7 @@ export default function Book() {
   const paperStyle = {padding:'50px 20px', width:600, margin:"20px auto"}
   const[name, setName] = React.useState('')
   const[author,setAuthor]=React.useState('')
+  const[Books,setBooks]=React.useState([])
 
   const handleClick=(e)=>{
     e.preventDefault()
@@ -21,6 +22,15 @@ export default function Book() {
     })
   }
 
+React.useEffect(()=>{
+  fetch("http://localhost:8080/book/getAll")
+  .then(res=>res.json())
+  .then((result)=>{
+    setBooks(result);
+  },[])
+}
+
+)
 
   return (
     <Container>
@@ -44,13 +54,21 @@ export default function Book() {
 <Button variant="contained" color="secondary" onClick={handleClick}>Submit</Button>
       
     </Box>
-    {name}
-    <br></br>
-    {author}
-    <br></br>
-    <br></br>
+   
 
     </Paper>
+    <h1>Books</h1>
+    <Paper elevation={3} style={paperStyle}>
+      {Books.map(book=>(
+        <Paper elevation={6} style={{margin:"10px", padding:"15px", textAlign:"left"}} key={book.id}>
+          id:{book.id}
+          Name:{book.name}
+          Author:{book.author}
+          </Paper>
+      ))}
+    </Paper>
+
+
     </Container>
   );
 }
